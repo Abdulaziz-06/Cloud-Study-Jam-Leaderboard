@@ -7,7 +7,7 @@ export default function NotFound() {
       <div className="text-center">
         <div className="mb-8">
           <Image 
-            src="/assets/cloudLg.png" 
+            src="/assets/cloudLg.svg" 
             alt="Google Cloud" 
             width="120" 
             height="120" 

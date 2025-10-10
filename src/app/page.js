@@ -14,7 +14,7 @@ export default function Home() {
     <>
       <nav className='w-full  shadow-md relative '>
         <div className="bg-dark-bg text-off-white w-full m-auto text-center p-2 flex justify-center items-center">
-          <div className=""><Image src="/assets/cloudLg.png" alt="me" width="40" height="40" /></div>
+          <div className=""><Image src="/assets/cloudLg.svg" alt="Google Cloud Logo" width="40" height="40" /></div>
           <p className=''>
             Demo Days: Google Cloud Study Jams 2025-26
           </p>
@@ -23,7 +23,7 @@ export default function Home() {
         <div className="w-full px-6 py-3 flex mob:flex-col justify-between items-center">
           <div className="logo mob:border-b mob:border-b-gray-200 flex justify-center items-center">
             <div className="img w-16 h-1w-16 rounded-full ">
-              <Image src="/assets/gdsc-logo.png" alt="me" width="64" height="64" />
+              <Image src="/assets/gdsc-logo.svg" alt="GDSC Logo" width="64" height="64" />
             </div>
             <div className="text flex flex-col justify-start items-start">
               <p className="text-base">Google Devloper Student Club</p>
