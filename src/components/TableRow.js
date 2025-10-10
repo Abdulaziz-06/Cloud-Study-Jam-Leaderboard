@@ -18,7 +18,7 @@ function TableRow({ participant, position }) {
                         <div className="flex items-center gap-2 text-base font-semibold text-[var(--text-color)]">
                             {participant["User Name"]}
                         </div>
-                        <p className="text-xs tracking-[0.3em] text-[var(--text-color)]/60">
+                        <p className="text-xs font-mono tracking-wide text-[var(--text-color)]/60">
                             {participant["User Email"]?.toLowerCase() || "Email hidden"}
                         </p>
                     </div>

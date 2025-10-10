@@ -3,7 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
-const Switch = () => {
+type SwitchProps = { sizePx?: number }
+
+const Switch: React.FC<SwitchProps> = ({ sizePx = 24 }) => {
   const [theme, setTheme] = useState('dark');
 
   useEffect(() => {
@@ -24,7 +26,7 @@ const Switch = () => {
 
   return (
     <StyledWrapper>
-      <label className="theme-switch">
+      <label className="theme-switch" style={{ ['--toggle-size' as any]: `${sizePx}px` }}>
         <input 
           type="checkbox" 
           className="theme-switch__checkbox" 
