@@ -9,7 +9,7 @@ function TableBody({ Participationdata, searchTerm }) {
             {hasResults ? (
                 Participationdata.map((participant, index) => (
                     <TableRow
-                        key={participant['Student Email'] || `${participant['Student Name']}-${index}`}
+                        key={participant['User Email'] || `${participant['User Name']}-${index}`}
                         participant={participant}
                         position={index + 1}
                     />
