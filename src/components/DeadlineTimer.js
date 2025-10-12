@@ -29,13 +29,18 @@ const DeadlineTimer = () => {
 
   return (
     <div className="text-center my-8">
-      <h2 className="text-2xl font-bold mb-4">Time Left to Complete Course</h2>
+      {/* Heading */}
+      <h2 className="text-2xl md:text-3xl font-semibold mb-2 text-[var(--color-header-text)]">
+        Time Left to Complete Course
+      </h2>
+
+      {/* Timer */}
       {timeLeft ? (
-        <div className="text-4xl font-bold text-yellow-600">
+        <div className="text-4xl md:text-5xl font-semibold text-[var(--color-header-text)]">
           <span>{timeLeft.days}</span> : <span>{timeLeft.hours}</span> : <span>{timeLeft.minutes}</span> : <span>{timeLeft.seconds}</span>
         </div>
       ) : (
-        <div className="text-4xl font-bold text-yellow-600">
+        <div className="text-4xl md:text-5xl font-semibold text-[var(--color-header-text)]">
           Loading...
         </div>
       )}

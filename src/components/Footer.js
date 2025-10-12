@@ -1,11 +1,9 @@
 export default function Footer() {
   return (
-    <footer className="w-full mt-12 border-t border-[var(--text-color)]/10 bg-[var(--background-color)] text-[var(--text-color)]">
-      <div className="max-w-6xl mx-auto px-6 py-6 text-center text-sm">
-        Created by gdg(tech team)
+    <footer className="w-full mt-12 py-6 text-center text-sm text-[var(--color-secondary)] border-t border-[var(--color-border)] bg-[var(--color-background)]">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        Created by GDSC (Tech Team)
       </div>
     </footer>
   )
 }
-
-
