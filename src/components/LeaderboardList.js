@@ -1,30 +1,30 @@
 import React from 'react'
-import TableRow from './TableRow'
+import ParticipantCard from './ParticipantCard'
 
-function TableBody({ Participationdata, searchTerm }) {
+function LeaderboardList({ Participationdata, searchTerm }) {
     const hasResults = Participationdata.length > 0
 
     return (
-        <tbody className="divide-y divide-[var(--text-color)]/10 text-sm text-[var(--text-color)]">
+        <div className="space-y-4">
             {hasResults ? (
                 Participationdata.map((participant, index) => (
-                    <TableRow
+                    <ParticipantCard
                         key={participant['User Email'] || `${participant['User Name']}-${index}`}
                         participant={participant}
                         position={index + 1}
                     />
                 ))
             ) : (
-                <tr>
-                    <td colSpan="3" className="px-6 py-14 text-center text-sm text-[var(--text-color)]/60">
+                <div className="text-center py-10">
+                    <p className="text-lg text-[var(--color-secondary)]">
                         {searchTerm?.trim()
                             ? `No participants found for "${searchTerm}"`
                             : 'No participant data available right now.'}
-                    </td>
-                </tr>
+                    </p>
+                </div>
             )}
-        </tbody>
+        </div>
     )
 }
 
-export default TableBody
+export default LeaderboardList
