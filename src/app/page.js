@@ -1,7 +1,7 @@
-"use client"
-import { useState } from 'react';
-import Image from 'next/image'
-import Link from 'next/link'
+'use client';
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
 import Leaderboard from "@/components/Leaderboard";
 import DeadlineTimer from "@/components/DeadlineTimer";
 import Switch from "@/components/ui/sky-toggle";
@@ -10,8 +10,38 @@ import data from "../../public/data.json";
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [currentLogo, setCurrentLogo] = useState('/assets/gdsc-logo_svg.svg');
   const totalParticipants = data.length;
 
+  // ✅ useEffect: updates logo based on theme
+  useEffect(() => {
+    const storedTheme = localStorage.getItem('theme');
+    const initialTheme = storedTheme || 'dark';
+    setCurrentLogo(
+      initialTheme === 'light'
+        ? '/assets/gdsc-logo-svg-light.svg'
+        : '/assets/gdsc-logo_svg.svg'
+    );
+
+    // ✅ fixed JS-compatible handler
+    const handleThemeChange = (event) => {
+      const newTheme = event.detail;
+      if (!newTheme) return;
+      setCurrentLogo(
+        newTheme === 'light'
+          ? '/assets/gdsc-logo-svg-light.svg'
+          : '/assets/gdsc-logo_svg.svg'
+      );
+    };
+
+    window.addEventListener('themeChange', handleThemeChange);
+
+    return () => {
+      window.removeEventListener('themeChange', handleThemeChange);
+    };
+  }, []);
+
+  // ✅ Social Links component
   const SocialLinks = () => (
     <>
       <Link href="https://linkedin.com/company/gdgoc-gctc">
@@ -21,6 +51,7 @@ export default function Home() {
           </svg>
         </div>
       </Link>
+
       <Link href="https://x.com/gdgoc_gctc">
         <div className="cursor-pointer hover:text-accent transition-colors">
           <svg className='w-6 h-6' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -28,6 +59,7 @@ export default function Home() {
           </svg>
         </div>
       </Link>
+
       <Link href="https://www.instagram.com/gdgoc.gctc?igsh=ZXI4a3VoYjRqdnFk">
         <div className="cursor-pointer hover:text-accent transition-colors">
           <svg className='w-6 h-6' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
@@ -35,6 +67,7 @@ export default function Home() {
           </svg>
         </div>
       </Link>
+
       <Link href="http://gdg.community.dev/gdg-on-campus-geethanjali-college-of-engineering-and-technology-hyderabad-india">
         <div className="cursor-pointer hover:text-accent transition-colors">
           <svg className='w-6 h-6' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -42,6 +75,7 @@ export default function Home() {
           </svg>
         </div>
       </Link>
+
       <div className="h-4 flex items-center">
         <Switch sizePx={16} />
       </div>
@@ -50,30 +84,42 @@ export default function Home() {
 
   return (
     <>
+      {/* Navbar */}
       <nav className='w-full shadow-md relative bg-[var(--color-background)] border-b border-[var(--color-border)]'>
         <div className="bg-[var(--color-background)] text-[var(--color-header-text)] w-full m-auto text-center p-2 flex justify-center items-center">
-          <div className=""><Image src="/assets/cloudLg.svg" alt="Google Cloud Logo" width="40" height="40" /></div>
+          <div><Image src="/assets/cloudLg.svg" alt="Google Cloud Logo" width="40" height="40" /></div>
           <p className='text-sm md:text-base'>
             Demo Days: Google Cloud Study Jams 2025-26
           </p>
         </div>
 
-        <div className="w-full px-4 md:px-6 py-3 flex justify-between items-center">
-          <div className="logo flex justify-center items-center">
-            <div className="img w-12 h-12 md:w-16 md:h-16 rounded-full overflow-hidden flex-shrink-0">
-              <Image src="/assets/gdsc-logo_svg.svg" alt="GDSC Logo" width="64" height="64" />
-            </div>
-            <div className="text flex flex-col justify-start items-start pl-3">
-              <p className="text-sm md:text-base font-semibold text-[var(--color-primary)]">Google Developer Student Club</p>
-              <p className="text-xs md:text-sm text-[var(--color-secondary)]">On Campus GCTC</p>
+        <div className="w-full pl-0 pr-4 md:pl-0 md:pr-6 py-3 flex justify-between items-center">
+          <div className="logo flex items-center justify-start h-12 md:h-16 -ml-6 md:-ml-10">
+            <div className="relative h-full w-[22rem] md:w-[32rem]">
+              <Image
+                src={currentLogo}
+                alt="GDSC Logo"
+                fill
+                sizes="(max-width: 768px) 22rem, 32rem"
+                className="object-contain"
+                priority
+              />
             </div>
           </div>
 
           {/* Hamburger Menu for Mobile */}
           <div className="md:hidden">
-            <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="text-[var(--color-primary)] focus:outline-none">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"}></path>
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-[var(--color-primary)] focus:outline-none"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"}
+                />
               </svg>
             </button>
           </div>
@@ -94,18 +140,22 @@ export default function Home() {
         )}
       </nav>
 
-      {/* Updated Deadline Timer */}
+      {/* Deadline Timer */}
       <DeadlineTimer />
 
-      {/* Updated Total Participants */}
+      {/* Total Participants */}
       <div className="text-center my-8 md:my-12">
-        <h2 className="text-2xl md:text-3xl font-bold mb-4 text-[var(--color-header-text)]">Total Participants</h2>
-        <div className="text-4xl md:text-5xl font-bold text-[var(--color-header-text)]">{totalParticipants}</div>
+        <h2 className="text-2xl md:text-3xl font-bold mb-4 text-[var(--color-header-text)]">
+          Total Participants
+        </h2>
+        <div className="text-4xl md:text-5xl font-bold text-[var(--color-header-text)]">
+          {totalParticipants}
+        </div>
       </div>
 
       <Leaderboard />
 
       <Footer />
     </>
-  )
+  );
 }
