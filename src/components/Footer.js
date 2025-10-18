@@ -7,7 +7,7 @@ export default function Footer() {
           <span className="mx-1 font-semibold text-[var(--color-primary)] hover:text-blue-400 transition-colors">
             Abdul Aziz
           </span>
-          | Web Development Lead @ GDSC OC
+          | WebDevLead @ GDGOC GCTC
         </p>
       </div>
     </footer>
