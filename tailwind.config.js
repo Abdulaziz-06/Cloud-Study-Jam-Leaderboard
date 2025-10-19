@@ -8,6 +8,9 @@ module.exports = {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			'sans': ['var(--font-google-sans)', 'system-ui', 'sans-serif'],
+  		},
   		colors: {
         // Custom colors based on original dark theme
         'color-background': 'var(--color-background)',

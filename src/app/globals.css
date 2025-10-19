@@ -93,37 +93,476 @@ body {
   color: var(--color-primary);
   animation: fadeIn 1s ease-in-out;
   font-size: clamp(14px, 1.5vw, 16px);
+  font-family: var(--font-google-sans), -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
-.stat-card {
+/* Metric Cards - Modern Design */
+.metric-card {
+  position: relative;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
+}
+
+.metric-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.metric-card:hover::before {
+  opacity: 1;
+}
+
+/* Icon Wrapper */
+.metric-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.metric-card:hover .metric-icon-wrapper {
+  transform: rotate(10deg) scale(1.1);
+}
+
+/* Content Styling */
+.metric-content {
+  flex: 1;
+}
+
+.metric-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.9;
+}
+
+.metric-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.metric-value-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Blue Card (Credits Redeemed) - Google Blue */
+.metric-card-blue {
+  background: linear-gradient(135deg, #4285F4 0%, #1a73e8 100%);
+}
+
+[data-theme='dark'] .metric-card-blue {
+  background: linear-gradient(135deg, rgba(66, 133, 244, 0.2) 0%, rgba(26, 115, 232, 0.3) 100%);
+  border: 1px solid rgba(66, 133, 244, 0.3);
+}
+
+.metric-card-blue::before {
+  background: linear-gradient(135deg, #1a73e8 0%, #0d47a1 100%);
+}
+
+[data-theme='dark'] .metric-card-blue::before {
+  background: linear-gradient(135deg, rgba(66, 133, 244, 0.4) 0%, rgba(26, 115, 232, 0.5) 100%);
+}
+
+.metric-icon-blue {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme='dark'] .metric-icon-blue {
+  background: rgba(66, 133, 244, 0.3);
+}
+
+.metric-card-blue .metric-label,
+.metric-card-blue .metric-value {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .metric-card-blue .metric-label {
+  color: #aecbfa;
+}
+
+[data-theme='dark'] .metric-card-blue .metric-value {
+  color: #ffffff;
+}
+
+/* Red Card (Total Badges) - Google Red */
+.metric-card-red {
+  background: linear-gradient(135deg, #EA4335 0%, #c5221f 100%);
+}
+
+[data-theme='dark'] .metric-card-red {
+  background: linear-gradient(135deg, rgba(234, 67, 53, 0.2) 0%, rgba(197, 34, 31, 0.3) 100%);
+  border: 1px solid rgba(234, 67, 53, 0.3);
+}
+
+.metric-card-red::before {
+  background: linear-gradient(135deg, #c5221f 0%, #a50e0e 100%);
+}
+
+[data-theme='dark'] .metric-card-red::before {
+  background: linear-gradient(135deg, rgba(234, 67, 53, 0.4) 0%, rgba(197, 34, 31, 0.5) 100%);
+}
+
+.metric-icon-red {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme='dark'] .metric-icon-red {
+  background: rgba(234, 67, 53, 0.3);
+}
+
+.metric-card-red .metric-label,
+.metric-card-red .metric-value {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .metric-card-red .metric-label {
+  color: #fcc4c0;
+}
+
+[data-theme='dark'] .metric-card-red .metric-value {
+  color: #ffffff;
+}
+
+/* Yellow Card (Top Performer) - Google Yellow */
+.metric-card-yellow {
+  background: linear-gradient(135deg, #FBBC04 0%, #f9ab00 100%);
+}
+
+[data-theme='dark'] .metric-card-yellow {
+  background: linear-gradient(135deg, rgba(251, 188, 4, 0.3) 0%, rgba(249, 171, 0, 0.4) 100%);
+  border: 1px solid rgba(251, 188, 4, 0.4);
+}
+
+.metric-card-yellow::before {
+  background: linear-gradient(135deg, #f9ab00 0%, #e37400 100%);
+}
+
+[data-theme='dark'] .metric-card-yellow::before {
+  background: linear-gradient(135deg, rgba(251, 188, 4, 0.5) 0%, rgba(249, 171, 0, 0.6) 100%);
+}
+
+.metric-icon-yellow {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme='dark'] .metric-icon-yellow {
+  background: rgba(251, 188, 4, 0.3);
+}
+
+.metric-card-yellow .metric-label,
+.metric-card-yellow .metric-value,
+.metric-card-yellow .metric-value-name {
+  color: #202124;
+}
+
+[data-theme='dark'] .metric-card-yellow .metric-label {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+[data-theme='dark'] .metric-card-yellow .metric-value,
+[data-theme='dark'] .metric-card-yellow .metric-value-name {
+  color: #ffffff;
+}
+
+/* Green Card (Game Winners) - Google Green */
+.metric-card-green {
+  background: linear-gradient(135deg, #34A853 0%, #0f9d58 100%);
+}
+
+[data-theme='dark'] .metric-card-green {
+  background: linear-gradient(135deg, rgba(52, 168, 83, 0.2) 0%, rgba(15, 157, 88, 0.3) 100%);
+  border: 1px solid rgba(52, 168, 83, 0.3);
+}
+
+.metric-card-green::before {
+  background: linear-gradient(135deg, #0f9d58 0%, #0b8043 100%);
+}
+
+[data-theme='dark'] .metric-card-green::before {
+  background: linear-gradient(135deg, rgba(52, 168, 83, 0.4) 0%, rgba(15, 157, 88, 0.5) 100%);
+}
+
+.metric-icon-green {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme='dark'] .metric-icon-green {
+  background: rgba(52, 168, 83, 0.3);
+}
+
+.metric-card-green .metric-label,
+.metric-card-green .metric-value {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .metric-card-green .metric-label {
+  color: #b8e6c4;
+}
+
+[data-theme='dark'] .metric-card-green .metric-value {
+  color: #ffffff;
+}
+
+/* Purple Card (Skill Badge Masters) - Custom Purple */
+.metric-card-purple {
+  background: linear-gradient(135deg, #9334e9 0%, #7c3aed 100%);
+}
+
+[data-theme='dark'] .metric-card-purple {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.2) 0%, rgba(124, 58, 237, 0.3) 100%);
+  border: 1px solid rgba(147, 51, 234, 0.3);
+}
+
+.metric-card-purple::before {
+  background: linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%);
+}
+
+[data-theme='dark'] .metric-card-purple::before {
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.4) 0%, rgba(124, 58, 237, 0.5) 100%);
+}
+
+.metric-icon-purple {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme='dark'] .metric-icon-purple {
+  background: rgba(147, 51, 234, 0.3);
+}
+
+.metric-card-purple .metric-label,
+.metric-card-purple .metric-value {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .metric-card-purple .metric-label {
+  color: #e9d5ff;
+}
+
+[data-theme='dark'] .metric-card-purple .metric-value {
+  color: #ffffff;
+}
+
+/* Desktop Layout - Single Row */
+@media (min-width: 1024px) {
+  .metric-card {
+    padding: 1.5rem;
+    min-height: 140px;
+    margin: 0 0.5rem;
+  }
+  
+  .metric-icon-wrapper {
+    width: 52px;
+    height: 52px;
+  }
+  
+  .metric-value {
+    font-size: 2.25rem;
+  }
+  
+  .metric-value-name {
+    font-size: 1.125rem;
+  }
+  
+  .metric-label {
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+  }
+}
+
+/* Mobile Layout - Bento Grid */
+@media (max-width: 1023px) {
+  .metric-card {
+    padding: 0.875rem;
+    min-height: 90px;
+  }
+  
+  .metric-icon-wrapper {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .metric-value {
+    font-size: 1.5rem;
+  }
+  
+  .metric-value-name {
+    font-size: 0.8rem;
+    line-height: 1.2;
+  }
+  
+  .metric-label {
+    font-size: 0.7rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  /* Special styling for the full-width card in mobile */
+  .metric-card.col-span-2 {
+    min-height: 70px;
+    padding: 1rem;
+  }
+  
+  .metric-card.col-span-2 .metric-icon-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .metric-card.col-span-2 .metric-value {
+    font-size: 1.75rem;
+  }
+  
+  .metric-card.col-span-2 .metric-label {
+    font-size: 0.8rem;
+  }
+  
+  /* Mobile header improvements */
+  .mobile-header {
+    padding: 0.75rem 1rem;
+  }
+  
+  .mobile-logo {
+    height: 2.5rem;
+  }
+}
+
+/* Top Performer Highlighting - Light Mode Only */
+.top-performer-row {
+  background: linear-gradient(to right, #fef3c7, #fde68a);
+  border-left: 4px solid #f59e0b;
+}
+
+.top-performer-card {
+  background: linear-gradient(to right, #fef3c7, #fde68a);
+  border: 2px solid #f59e0b;
+}
+
+/* Dark mode - no golden background */
+[data-theme='dark'] .top-performer-row {
+  background: transparent;
+  border-left: none;
+}
+
+[data-theme='dark'] .top-performer-card {
+  background: var(--color-card-background);
+  border: none;
+}
+
+/* Hover effects - only on actual hover, not focus */
+.group:hover:not(.top-performer-row) {
   background-color: var(--color-card-background);
-  border: 1px solid var(--color-border);
-  transition: all 0.3s ease-in-out;
 }
 
-.stat-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+/* Remove focus-based hover effects */
+.group:focus {
+  background-color: transparent;
 }
 
-[data-theme='light'] .stat-card {
-  background-image: linear-gradient(to right, #E8F0FE, #FCE8E6);
+.group:focus-visible {
+  background-color: transparent;
 }
 
-[data-theme='light'] .stat-card:hover {
-  background-image: linear-gradient(to right, #FCE8E6, #E8F0FE);
+/* ParticipantCard - no hover effects */
+.group:focus {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: scale(1);
 }
 
-[data-theme='dark'] .stat-card {
-  background-image: linear-gradient(to right, #000000 60%, #A9A9A9);
-}
-
-[data-theme='dark'] .stat-card:hover {
-  background-image: linear-gradient(to right, #A9A9A9 40%, #000000);
+.group:focus-visible {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transform: scale(1);
 }
 
 .uploadSec {
   box-shadow: 0px 0px 21px 0px rgba(118, 159, 255, 0.3);
+}
+
+/* Gift Box Animation */
+.gift-box-button {
+  animation: giftBoxVibration 2s ease-in-out infinite;
+  cursor: pointer;
+}
+
+@keyframes giftBoxVibration {
+  0%, 100% {
+    transform: translateX(0) translateY(0) rotate(0deg);
+  }
+  10% {
+    transform: translateX(-2px) translateY(-1px) rotate(-1deg);
+  }
+  20% {
+    transform: translateX(2px) translateY(1px) rotate(1deg);
+  }
+  30% {
+    transform: translateX(-1px) translateY(2px) rotate(-0.5deg);
+  }
+  40% {
+    transform: translateX(1px) translateY(-1px) rotate(0.5deg);
+  }
+  50% {
+    transform: translateX(-1px) translateY(1px) rotate(-0.3deg);
+  }
+  60% {
+    transform: translateX(1px) translateY(-2px) rotate(0.3deg);
+  }
+  70% {
+    transform: translateX(-2px) translateY(1px) rotate(-0.7deg);
+  }
+  80% {
+    transform: translateX(2px) translateY(-1px) rotate(0.7deg);
+  }
+  90% {
+    transform: translateX(-1px) translateY(1px) rotate(-0.2deg);
+  }
+}
+
+/* Gift box hover effect */
+.gift-box-button:hover {
+  animation-play-state: paused;
+  transform: scale(1.1);
+}
+
+/* Popup animations */
+@keyframes popupSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.popup-enter {
+  animation: popupSlideIn 0.3s ease-out;
 }
 
 .completion {

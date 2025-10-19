@@ -1,7 +1,7 @@
 import React from 'react'
 import ParticipantCard from './ParticipantCard'
 
-function LeaderboardList({ Participationdata, searchTerm }) {
+function LeaderboardList({ Participationdata, searchTerm, topPerformer }) {
     const hasResults = Participationdata.length > 0
 
     return (
@@ -12,6 +12,7 @@ function LeaderboardList({ Participationdata, searchTerm }) {
                         key={participant['User Email'] || `${participant['User Name']}-${index}`}
                         participant={participant}
                         position={index + 1}
+                        topPerformer={topPerformer}
                     />
                 ))
             ) : (
