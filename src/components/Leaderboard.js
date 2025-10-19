@@ -67,17 +67,20 @@ function Leaderboard() {
               </tr>
             </thead>
             <tbody className="divide-y divide-[var(--color-border)] text-sm text-[var(--color-primary)]">
-              {filteredData.map((participant, index) => (
-                <tr key={participant['User Email'] || `${participant['User Name']}-${index}`} className="hover:bg-[var(--color-card-background)] transition-colors">
-                  <td className="p-4">{index + 1}</td>
-                  <td className="p-4">
-                    <div className="truncate">{participant["User Name"]}</div>
-                    <div className="text-xs text-[var(--color-secondary)] truncate">{participant["User Email"]?.toLowerCase() || "Email hidden"}</div>
-                  </td>
-                  <td className="p-4">{participant["# of Skill Badges Completed"]}</td>
-                  <td className="p-4">{participant["# of Arcade Games Completed"]}</td>
-                </tr>
-              ))}
+              {filteredData.map((participant, index) => {
+                const originalIndex = Participationdata.findIndex(p => p["User Name"] === participant["User Name"]);
+                return (
+                  <tr key={participant['User Email'] || `${participant['User Name']}-${index}`} className={`hover:bg-[var(--color-card-background)] transition-colors`}>
+                    <td className="p-4">{originalIndex + 1}</td>
+                    <td className="p-4">
+                      <div className="truncate">{participant["User Name"]}</div>
+                      <div className="text-xs text-[var(--color-secondary)] truncate">{participant["User Email"]?.toLowerCase() || "Email hidden"}</div>
+                    </td>
+                    <td className="p-4">{participant["# of Skill Badges Completed"]}</td>
+                    <td className="p-4">{participant["# of Arcade Games Completed"]}</td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
