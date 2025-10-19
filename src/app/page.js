@@ -219,7 +219,7 @@ export default function Home() {
           title="Click to reveal swags!"
         >
           <Image
-            src="/giftbox.png.png"
+            src="/giftbox.svg"
             alt="Gift Box"
             width={48}
             height={48}
@@ -235,7 +235,7 @@ export default function Home() {
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl transform transition-all duration-300 scale-100 popup-enter">
             <div className="mb-6">
               <Image
-                src="/giftbox.png.png"
+                src="/giftbox.svg"
                 alt="Gift Box"
                 width={64}
                 height={64}
