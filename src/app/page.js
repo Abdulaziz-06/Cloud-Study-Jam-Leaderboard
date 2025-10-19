@@ -7,11 +7,45 @@ import DeadlineTimer from "@/components/DeadlineTimer";
 import Switch from "@/components/ui/sky-toggle";
 import Footer from "@/components/Footer";
 import data from "../../public/data.json";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentLogo, setCurrentLogo] = useState('/assets/gdsc-logo_svg.svg');
   const totalParticipants = data.length;
+  const skillBadgeMasters = data.filter(
+    (participant) => participant["All Skill Badges & Games Completed"] === "Yes"
+  ).length;
+  const gameWinners = data.filter(
+    (participant) => participant["# of Arcade Games Completed"] > 0 && participant["All Skill Badges & Games Completed"] === "Yes"
+  ).length;
+  const creditsRedeemed = data.filter(
+    (participant) => participant["Access Code Redemption Status"] === "Yes"
+  ).length;
+
+  const totalBadgesEarned = data.reduce((acc, participant) => acc + participant["# of Skill Badges Completed"], 0);
+  const averageProgress = totalParticipants > 0 ? (totalBadgesEarned / totalParticipants).toFixed(2) : 0;
+  const topPerformer = data.reduce((prev, current) => {
+    const prevTotal = prev["# of Skill Badges Completed"];
+    const currentTotal = current["# of Skill Badges Completed"];
+    return (prevTotal > currentTotal) ? prev : current;
+  });
+
+  const activeParticipants = data.filter(
+    (participant) => participant["# of Skill Badges Completed"] > 0 || participant["# of Arcade Games Completed"] > 0
+  ).length;
+
+  const completionRate = totalParticipants > 0 ? ((skillBadgeMasters / totalParticipants) * 100).toFixed(2) : 0;
+
+  const averageCompletionRate = totalParticipants > 0 ? (data.reduce((acc, p) => acc + (p["# of Skill Badges Completed"] + p["# of Arcade Games Completed"]), 0) / (totalParticipants * 20) * 100).toFixed(2) : 0;
+
+  const performanceData = Array.from({ length: 20 }, (_, i) => {
+    const count = data.filter(p => p['# of Skill Badges Completed'] === i).length;
+    return { name: `${i} Badges`, count };
+  });
+
+  const COLORS = ['#4285F4', '#EA4335', '#FBBC05', '#34A853'];
+
 
   // ✅ useEffect: updates logo based on theme
   useEffect(() => {
@@ -143,13 +177,57 @@ export default function Home() {
       {/* Deadline Timer */}
       <DeadlineTimer />
 
-      {/* Total Participants */}
+      {/* Program Metrics */}
       <div className="text-center my-8 md:my-12">
         <h2 className="text-2xl md:text-3xl font-bold mb-4 text-[var(--color-header-text)]">
-          Total Participants
+          Program Metrics
         </h2>
-        <div className="text-4xl md:text-5xl font-bold text-[var(--color-header-text)]">
-          {totalParticipants}
+        <div className="flex flex-wrap justify-center gap-4 px-4 md:flex-nowrap">
+          <div className="stat-card p-4 rounded-lg shadow-md flex items-center w-full md:w-1/5">
+            <div className="mr-4">
+              <svg className="w-8 h-8 text-[var(--color-primary)]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-[var(--color-primary)]">Credits Redeemed</h3>
+              <p className="text-3xl font-bold text-[var(--color-primary)]">{creditsRedeemed}</p>
+            </div>
+          </div>
+          <div className="stat-card p-4 rounded-lg shadow-md flex items-center w-full md:w-1/5">
+            <div className="mr-4">
+              <svg className="w-8 h-8 text-[var(--color-primary)]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /></svg>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-[var(--color-primary)]">Total Badges Earned</h3>
+              <p className="text-3xl font-bold text-[var(--color-primary)]">{totalBadgesEarned}</p>
+            </div>
+          </div>
+          <div className="stat-card p-4 rounded-lg shadow-md flex items-center w-full md:w-1/5">
+            <div className="mr-4">
+              <svg className="w-8 h-8 text-[var(--color-primary)]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-14l-3 3m5 5l3-3m-8 8l-3 3m5-5l3 3M5 21v-4M3 19h4m13-13l-3 3m5 5l3-3m-8 8l-3 3m5-5l3 3" /></svg>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-[var(--color-primary)]">Top Performer</h3>
+              <p className="text-3xl font-bold text-[var(--color-primary)]">{topPerformer["User Name"]}</p>
+            </div>
+          </div>
+          <div className="stat-card p-4 rounded-lg shadow-md flex items-center w-full md:w-1/5">
+            <div className="mr-4">
+              <svg className="w-8 h-8 text-[var(--color-primary)]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h5a3 3 0 013 3v1" /></svg>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-[var(--color-primary)]">Game Winners</h3>
+              <p className="text-3xl font-bold text-[var(--color-primary)]">{gameWinners}</p>
+            </div>
+          </div>
+          <div className="stat-card p-4 rounded-lg shadow-md flex items-center w-full md:w-1/5">
+            <div className="mr-4">
+              <svg className="w-8 h-8 text-[var(--color-primary)]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l7-3v13l-7 3zM9 19a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h2a2 2 0 012 2v13zm7-13a2 2 0 00-2-2h-2a2 2 0 00-2 2v13a2 2 0 002 2h2a2 2 0 002-2V6z" /></svg>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-[var(--color-primary)]">Skill Badge Masters</h3>
+              <p className="text-3xl font-bold text-[var(--color-primary)]">{skillBadgeMasters}</p>
+            </div>
+          </div>
         </div>
       </div>
 
