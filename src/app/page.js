@@ -19,9 +19,7 @@ export default function Home() {
   const skillBadgeMasters = data.filter(
     (participant) => participant["All Skill Badges & Games Completed"] === "Yes"
   ).length;
-  const gameWinners = data.filter(
-    (participant) => participant["# of Arcade Games Completed"] > 0 && participant["All Skill Badges & Games Completed"] === "Yes"
-  ).length;
+  const gameWinners = data.reduce((acc, participant) => acc + participant["# of Arcade Games Completed"], 0);
   const creditsRedeemed = data.filter(
     (participant) => participant["Access Code Redemption Status"] === "Yes"
   ).length;
