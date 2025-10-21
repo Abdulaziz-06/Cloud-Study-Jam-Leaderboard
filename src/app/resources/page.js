@@ -716,19 +716,19 @@ const ResourcesPage = () => {
 
   const tiers = [
     {
-      image: '/tier1.jpg',
+      image: '/tier1.svg',
       title: 'Tier 1 - Premium Swags',
       message: 'When 100 students complete the campaign, the top 100 achievers will receive these exclusive premium swags!',
       requirement: '100 students needed'
     },
     {
-      image: '/tier2.jpg',
+      image: '/tier2.svg',
       title: 'Tier 2 - Elite Swags',
       message: 'When 70 students complete the campaign, the top 70 achievers will receive these elite swags!',
       requirement: '70 students needed'
     },
     {
-      image: '/tier3.jpg',
+      image: '/tier3.svg',
       title: 'Tier 3 - Special Swags',
       message: 'When 50 students complete the campaign, the top 50 achievers will receive these special swags!',
       requirement: '50 students needed'
