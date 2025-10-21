@@ -591,6 +591,55 @@ body {
   }
 }
 
+/* Tier Reveal Animations */
+@keyframes tierReveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05) translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes launchGlow {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(255, 193, 7, 0.8), 0 0 60px rgba(255, 152, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
+  }
+}
+
+@keyframes progressPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+.tier-reveal {
+  animation: tierReveal 1s ease-out;
+}
+
+.launch-glow {
+  animation: launchGlow 2s ease-in-out infinite;
+}
+
+.progress-pulse {
+  animation: progressPulse 1s ease-in-out;
+}
+
 
 
 

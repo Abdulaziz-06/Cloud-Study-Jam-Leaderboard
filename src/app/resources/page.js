@@ -8,6 +8,7 @@ import Switch from "@/components/ui/sky-toggle";
 import MobileSidebar from "@/components/MobileSidebar";
 import DeadlineTimer from "@/components/DeadlineTimer";
 import Footer from "@/components/Footer";
+import Confetti from 'react-confetti';
 
 const coursesData = [
   {
@@ -648,13 +649,6 @@ const SocialLinks = () => (
       </div>
     </Link>
 
-    <Link href="/resources">
-      <div className="cursor-pointer hover:text-accent transition-colors">
-        <svg className='w-6 h-6' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0112 21.75c1.052 0 2.062-.18 3-.512v-14.25c-1.052-.18-2.062-.25-3-.25zM12 6.042V3.75m0 2.292c-1.19 0-2.37-.08-3.548-.252M12 6.042c1.19 0 2.37.08 3.548.252m-4.478 8.278l-1.834-1.834m0 3.668L17.25 10.5m-1.834 1.834l1.834 1.834m-3.668 0l-1.834-1.834" />
-        </svg>
-      </div>
-    </Link>
 
     <div className="h-4 flex items-center">
       <Switch sizePx={16} />
@@ -668,6 +662,10 @@ const ResourcesPage = () => {
   const [currentLogo, setCurrentLogo] = useState('/assets/gdsc-logo_svg.svg');
   const [isGiftBoxOpen, setIsGiftBoxOpen] = useState(false);
   const [showSwagsMessage, setShowSwagsMessage] = useState(false);
+  const [currentTier, setCurrentTier] = useState(0);
+  const [isRevealing, setIsRevealing] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [windowDimensions, setWindowDimensions] = useState({ width: 0, height: 0 });
 
   const router = useRouter();
 
@@ -698,9 +696,68 @@ const ResourcesPage = () => {
     };
   }, []);
 
+  // Get window dimensions for confetti
+  useEffect(() => {
+    const updateWindowDimensions = () => {
+      setWindowDimensions({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    updateWindowDimensions();
+    window.addEventListener('resize', updateWindowDimensions);
+    return () => window.removeEventListener('resize', updateWindowDimensions);
+  }, []);
+
   const toggleCourse = (index) => {
     setOpenCourse(openCourse === index ? null : index);
   };
+
+  const tiers = [
+    {
+      image: '/tier1.jpg',
+      title: 'Tier 1 - Premium Swags',
+      message: 'When 100 students complete the campaign, the top 100 achievers will receive these exclusive premium swags!',
+      requirement: '100 students needed'
+    },
+    {
+      image: '/tier2.jpg',
+      title: 'Tier 2 - Elite Swags',
+      message: 'When 70 students complete the campaign, the top 70 achievers will receive these elite swags!',
+      requirement: '70 students needed'
+    },
+    {
+      image: '/tier3.jpg',
+      title: 'Tier 3 - Special Swags',
+      message: 'When 50 students complete the campaign, the top 50 achievers will receive these special swags!',
+      requirement: '50 students needed'
+    }
+  ];
+
+  const revealSwags = () => {
+    setIsRevealing(true);
+    setCurrentTier(0);
+    setShowSwagsMessage(true);
+    setShowConfetti(true);
+    
+    // Stop confetti after 6 seconds
+    setTimeout(() => setShowConfetti(false), 6000);
+    
+    // Launch-style reveal animation
+    const revealInterval = setInterval(() => {
+      setCurrentTier(prev => {
+        if (prev < tiers.length - 1) {
+          return prev + 1;
+        } else {
+          clearInterval(revealInterval);
+          setIsRevealing(false);
+          return prev;
+        }
+      });
+    }, 2000); // 2 seconds between each tier reveal
+  };
+
 
   return (
     <>
@@ -779,8 +836,19 @@ const ResourcesPage = () => {
         <MobileSidebar isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
       </nav>
 
-      {/* Deadline Timer - Copied from page.js */}
-      <DeadlineTimer />
+
+      {/* Confetti Effect */}
+      {showConfetti && (
+        <div className="fixed inset-0 z-[60] pointer-events-none">
+          <Confetti
+            width={windowDimensions.width}
+            height={windowDimensions.height}
+            recycle={false}
+            numberOfPieces={200}
+            gravity={0.3}
+          />
+        </div>
+      )}
 
       {/* Animated Gift Box - Copied from page.js */}
       <div className="fixed bottom-6 right-6 z-40">
@@ -822,34 +890,89 @@ const ResourcesPage = () => {
             
             {!showSwagsMessage ? (
               <button
-                onClick={() => setShowSwagsMessage(true)}
-                className="bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-white font-bold py-3 px-8 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg"
+                onClick={revealSwags}
+                className="bg-gradient-to-r from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 text-white font-semibold py-2 px-4 md:py-2.5 md:px-6 rounded-lg text-sm md:text-base transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg"
               >
-                🎉 Reveal Swags! 🎉
+                <span className="hidden sm:inline">🚀 Launch Swags Reveal! 🚀</span>
+                <span className="sm:hidden">🎁 Reveal Swags</span>
               </button>
             ) : (
-              <div className="space-y-4">
-                <div className="text-3xl font-bold text-yellow-600 animate-bounce">
-                  Hahahaha got you!! 😄
+              <div className="space-y-6">
+                <div className="relative">
+                  <div className="text-2xl font-bold text-gray-800 dark:text-white mb-4 text-center">
+                    {tiers[currentTier].title}
+                  </div>
+                  
+                  {/* Carousel Container */}
+                  <div className="relative mb-6">
+                    <div className="overflow-hidden rounded-xl launch-glow">
+                      <div className="flex transition-transform duration-500 ease-in-out" style={{ transform: `translateX(-${currentTier * 100}%)` }}>
+                        {tiers.map((tier, index) => (
+                          <div key={index} className="w-full flex-shrink-0">
+                            <div className="relative w-full h-64">
+                              <Image
+                                src={tier.image}
+                                alt={tier.title}
+                                fill
+                                className="object-contain tier-reveal transition-all duration-1000"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Carousel Navigation */}
+                    <div className="flex justify-center space-x-2 mt-4">
+                      {tiers.map((_, index) => (
+                        <button
+                          key={index}
+                          onClick={() => setCurrentTier(index)}
+                          className={`w-3 h-3 rounded-full transition-all duration-500 ${
+                            index === currentTier 
+                              ? 'bg-yellow-500 scale-125 progress-pulse' 
+                              : 'bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed text-center">
+                    {tiers[currentTier].message}
+                  </p>
+                  
+                  <div className="bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-300 dark:border-yellow-700 rounded-lg p-3 mt-4">
+                    <p className="text-yellow-800 dark:text-yellow-200 font-semibold text-sm text-center">
+                      📊 {tiers[currentTier].requirement}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Wait for a few more days! The real swags are coming soon! 🚀
-                </p>
+                
                 <div className="flex space-x-3 justify-center">
                   <button
                     onClick={() => {
                       setIsGiftBoxOpen(false);
                       setShowSwagsMessage(false);
+                      setCurrentTier(0);
+                      setIsRevealing(false);
+                      setShowConfetti(false);
                     }}
                     className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded-full transition-colors duration-200"
                   >
                     Close
                   </button>
                   <button
-                    onClick={() => setShowSwagsMessage(false)}
+                    onClick={() => {
+                      setShowSwagsMessage(false);
+                      setCurrentTier(0);
+                      setIsRevealing(false);
+                      setShowConfetti(false);
+                    }}
                     className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-6 rounded-full transition-colors duration-200"
                   >
-                    Try Again
+                    Launch Again
                   </button>
                 </div>
               </div>
@@ -859,6 +982,9 @@ const ResourcesPage = () => {
               onClick={() => {
                 setIsGiftBoxOpen(false);
                 setShowSwagsMessage(false);
+                setCurrentTier(0);
+                setIsRevealing(false);
+                setShowConfetti(false);
               }}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200"
             >
