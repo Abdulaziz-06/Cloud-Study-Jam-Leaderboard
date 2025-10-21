@@ -89,6 +89,27 @@ const MobileSidebar = ({ isOpen, onClose }) => {
           </svg>
         </div>
       </Link>
+
+      <Link href="/resources">
+        <div className="flex items-center space-x-4 p-4 rounded-xl hover:bg-[var(--color-card-background)] transition-all duration-200 group cursor-pointer">
+          <div className="flex-shrink-0 w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-200">
+            <svg className='w-6 h-6 text-white' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0112 21.75c1.052 0 2.062-.18 3-.512v-14.25c-1.052-.18-2.062-.25-3-.25zM12 6.042V3.75m0 2.292c-1.19 0-2.37-.08-3.548-.252M12 6.042c1.19 0 2.37.08 3.548.252m-4.478 8.278l-1.834-1.834m0 3.668L17.25 10.5m-1.834 1.834l1.834 1.834m-3.668 0l-1.834-1.834" />
+            </svg>
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-[var(--color-primary)] group-hover:text-[var(--color-accent)] transition-colors">
+              Resources
+            </h3>
+            <p className="text-sm text-[var(--color-secondary)]">
+              Find helpful materials
+            </p>
+          </div>
+          <svg className="w-5 h-5 text-[var(--color-secondary)] group-hover:text-[var(--color-accent)] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+        </div>
+      </Link>
     </>
   );
 
