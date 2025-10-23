@@ -464,15 +464,15 @@ body {
   border: 2px solid #f59e0b;
 }
 
-/* Dark mode - no golden background */
+/* Dark mode - golden styling for campaign completers */
 [data-theme='dark'] .top-performer-row {
-  background: transparent;
-  border-left: none;
+  background: linear-gradient(to right, #451a03, #78350f);
+  border-left: 4px solid #f59e0b;
 }
 
 [data-theme='dark'] .top-performer-card {
-  background: var(--color-card-background);
-  border: none;
+  background: linear-gradient(to right, #451a03, #78350f);
+  border: 2px solid #f59e0b;
 }
 
 /* Hover effects - only on actual hover, not focus */

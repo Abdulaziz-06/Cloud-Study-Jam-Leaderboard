@@ -159,7 +159,7 @@ const coursesData = [
       {
         "lab_name": "Get Started with Dataplex: Challenge Lab (Required)",
         "start_lab_link": "https://www.cloudskillsboost.google/course_templates/726/labs/461571",
-        "solution_link": "https://youtu.be/NzRcltfHzu0?si=OvMVCcr_Go_vmbDp"
+        "solution_link": "https://www.youtube.com/watch?v=2mrIwJpuEGM"
       }
     ]
   },
