@@ -10,24 +10,40 @@ function Leaderboard({ topPerformer }) {
   const imported_data = JSON.stringify(dataArr);
   const data = JSON.parse(imported_data);
   const [Participationdata, setParticipationdata] = useState(() => {
-    const sorted = [...data].sort((a, b) => {
+    const lockedParticipants = [];
+    const otherParticipants = [];
+
+    data.forEach(participant => {
+      const badges = Number(participant['# of Skill Badges Completed'] ?? 0);
+      const games = Number(participant['# of Arcade Games Completed'] ?? 0);
+
+      if (badges === 19 && games === 1) {
+        lockedParticipants.push(participant);
+      } else {
+        otherParticipants.push(participant);
+      }
+    });
+
+    // Keep locked participants in their original order from data.json
+    // No additional sorting applied to lockedParticipants here.
+
+    // Sort other participants by existing logic
+    otherParticipants.sort((a, b) => {
       const badgesA = Number(a['# of Skill Badges Completed'] ?? 0);
       const badgesB = Number(b['# of Skill Badges Completed'] ?? 0);
       
-      // First sort by skill badges (descending)
       if (badgesB !== badgesA) return badgesB - badgesA;
       
-      // If skill badges are equal, sort by arcade games (descending)
       const gamesA = Number(a['# of Arcade Games Completed'] ?? 0);
       const gamesB = Number(b['# of Arcade Games Completed'] ?? 0);
       if (gamesB !== gamesA) return gamesB - gamesA;
       
-      // If both are equal, sort by name (ascending)
       const nameA = String(a['User Name'] || '').toLowerCase();
       const nameB = String(b['User Name'] || '').toLowerCase();
       return nameA.localeCompare(nameB);
     });
-    return sorted;
+
+    return [...lockedParticipants, ...otherParticipants];
   });
   const [searchTerm, setSearchTerm] = useState('');
 
