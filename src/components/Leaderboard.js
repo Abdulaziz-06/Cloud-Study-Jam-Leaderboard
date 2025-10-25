@@ -4,46 +4,62 @@ import LeaderboardList from './LeaderboardList'
 import dataArr from '../../public/data.json'
 import useMobileLayout from '@/hooks/useMobileLayout';
 
+import lockedPlayersArr from '../../public/locked_players.json';
+
 function Leaderboard({ topPerformer }) {
   const isMobile = useMobileLayout();
 
   const imported_data = JSON.stringify(dataArr);
   const data = JSON.parse(imported_data);
+
   const [Participationdata, setParticipationdata] = useState(() => {
+    const lockedPlayersMap = new Map(lockedPlayersArr.map(p => [p["User Name"], p.locked_position]));
+
+    const indexedData = data.map((participant, index) => ({
+      ...participant,
+      originalIndex: index,
+      locked_position: lockedPlayersMap.get(participant["User Name"]),
+    }));
+
     const lockedParticipants = [];
+    const newMilestoneParticipants = [];
     const otherParticipants = [];
 
-    data.forEach(participant => {
+    indexedData.forEach(participant => {
       const badges = Number(participant['# of Skill Badges Completed'] ?? 0);
       const games = Number(participant['# of Arcade Games Completed'] ?? 0);
 
-      if (badges === 19 && games === 1) {
+      if (participant.locked_position) {
         lockedParticipants.push(participant);
+      } else if (badges === 19 && games === 1) {
+        newMilestoneParticipants.push(participant);
       } else {
         otherParticipants.push(participant);
       }
     });
 
-    // Keep locked participants in their original order from data.json
-    // No additional sorting applied to lockedParticipants here.
+    lockedParticipants.sort((a, b) => a.locked_position - b.locked_position);
 
-    // Sort other participants by existing logic
-    otherParticipants.sort((a, b) => {
+    const sortByScore = (a, b) => {
+      const coursesA = Number(a['# of Courses Completed'] ?? 0);
+      const coursesB = Number(b['# of Courses Completed'] ?? 0);
+      if (coursesB !== coursesA) return coursesB - coursesA;
+
       const badgesA = Number(a['# of Skill Badges Completed'] ?? 0);
       const badgesB = Number(b['# of Skill Badges Completed'] ?? 0);
-      
       if (badgesB !== badgesA) return badgesB - badgesA;
-      
+
       const gamesA = Number(a['# of Arcade Games Completed'] ?? 0);
       const gamesB = Number(b['# of Arcade Games Completed'] ?? 0);
       if (gamesB !== gamesA) return gamesB - gamesA;
-      
-      const nameA = String(a['User Name'] || '').toLowerCase();
-      const nameB = String(b['User Name'] || '').toLowerCase();
-      return nameA.localeCompare(nameB);
-    });
 
-    return [...lockedParticipants, ...otherParticipants];
+      return a.originalIndex - b.originalIndex;
+    };
+
+    newMilestoneParticipants.sort(sortByScore);
+    otherParticipants.sort(sortByScore);
+
+    return [...lockedParticipants, ...newMilestoneParticipants, ...otherParticipants];
   });
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -93,20 +109,30 @@ function Leaderboard({ topPerformer }) {
             </thead>
             <tbody className="divide-y divide-[var(--color-border)] text-sm text-[var(--color-primary)]">
               {filteredData.map((participant, index) => {
-                const originalIndex = Participationdata.findIndex(p => p["User Name"] === participant["User Name"]);
                 const badges = Number(participant['# of Skill Badges Completed'] ?? 0);
                 const games = Number(participant['# of Arcade Games Completed'] ?? 0);
                 const isCampaignCompleter = badges === 19 && games === 1;
+                let displayRank = index + 1;
+                if (participant.locked_position) {
+                  displayRank = participant.locked_position;
+                } else {
+                  const lockedCount = Participationdata.filter(p => p.locked_position).length;
+                  const newMilestoneCount = Participationdata.filter(p => p.badges === 19 && p.games === 1 && !p.locked_position).length;
+                  const unlockedBefore = Participationdata.slice(lockedCount + newMilestoneCount).findIndex(p => p["User Name"] === participant["User Name"]);
+                  if (unlockedBefore !== -1) {
+                    displayRank = lockedCount + newMilestoneCount + unlockedBefore + 1;
+                  }
+                }
                 
                 return (
-                  <tr key={participant['User Email'] || `${participant['User Name']}-${index}`} className={`group transition-colors ${
+                  <tr key={participant.originalIndex} className={`group transition-colors ${
                     isCampaignCompleter 
                       ? "top-performer-row" 
                       : ""
                   }`}>
                     <td className="p-4">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold">{originalIndex + 1}</span>
+                        <span className="font-semibold">{displayRank}</span>
                         {isCampaignCompleter && (
                           <div className="flex items-center">
                             <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
