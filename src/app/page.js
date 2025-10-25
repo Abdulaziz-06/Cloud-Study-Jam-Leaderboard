@@ -24,7 +24,8 @@ export default function Home() {
   const skillBadgeMasters = data.filter(
     (participant) => {
       const skillBadges = Number(participant["# of Skill Badges Completed"] || 0);
-      return skillBadges >= 19;
+      const games = Number(participant["# of Arcade Games Completed"] || 0);
+      return skillBadges >= 19 && games >= 1;
     }
   ).length;
   const gameWinners = data.reduce((acc, participant) => acc + participant["# of Arcade Games Completed"], 0);
