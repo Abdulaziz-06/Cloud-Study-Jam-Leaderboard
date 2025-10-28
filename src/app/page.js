@@ -8,6 +8,7 @@ import Switch from "@/components/ui/sky-toggle";
 import Footer from "@/components/Footer";
 import MobileSidebar from "@/components/MobileSidebar";
 import data from "../../public/data.json";
+import lockedPlayersData from "../../public/locked_players.json";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Confetti from 'react-confetti';
 
@@ -93,23 +94,12 @@ export default function Home() {
 
   const totalBadgesEarned = data.reduce((acc, participant) => acc + participant["# of Skill Badges Completed"], 0);
   const averageProgress = totalParticipants > 0 ? (totalBadgesEarned / totalParticipants).toFixed(2) : 0;
-  const topPerformer = data.reduce((prev, current) => {
-    const prevBadges = Number(prev["# of Skill Badges Completed"] ?? 0);
-    const currentBadges = Number(current["# of Skill Badges Completed"] ?? 0);
-    
-    // First compare by skill badges
-    if (currentBadges > prevBadges) return current;
-    if (prevBadges > currentBadges) return prev;
-    
-    // If skill badges are equal, compare by arcade games
-    const prevGames = Number(prev["# of Arcade Games Completed"] ?? 0);
-    const currentGames = Number(current["# of Arcade Games Completed"] ?? 0);
-    if (currentGames > prevGames) return current;
-    if (prevGames > currentGames) return prev;
-    
-    // If both are equal, keep the first one (prev)
-    return prev;
-  });
+  const topPerformer = lockedPlayersData.length > 0 ? lockedPlayersData[0] : {
+    "User Name": "N/A",
+    "Google Cloud Skills Boost Profile URL": "#",
+    "# of Skill Badges Completed": 0,
+    "# of Arcade Games Completed": 0
+  };
 
   const activeParticipants = data.filter(
     (participant) => participant["# of Skill Badges Completed"] > 0 || participant["# of Arcade Games Completed"] > 0
@@ -118,6 +108,17 @@ export default function Home() {
   const completionRate = totalParticipants > 0 ? ((skillBadgeMasters / totalParticipants) * 100).toFixed(2) : 0;
 
   const averageCompletionRate = totalParticipants > 0 ? (data.reduce((acc, p) => acc + (p["# of Skill Badges Completed"] + p["# of Arcade Games Completed"]), 0) / (totalParticipants * 20) * 100).toFixed(2) : 0;
+
+  const participantsWith19SkillBadges = data.filter(
+    (participant) => Number(participant["# of Skill Badges Completed"] || 0) >= 19
+  ).length;
+
+  const participantsWithAnyArcadeGames = data.filter(
+    (participant) => Number(participant["# of Arcade Games Completed"] || 0) >= 1
+  ).length;
+
+  const skillBadges19Percentage = Math.min((participantsWith19SkillBadges / 50) * 100, 100).toFixed(1);
+  const arcadeGamesPercentage = Math.min((participantsWithAnyArcadeGames / 50) * 100, 100).toFixed(1);
 
   const performanceData = Array.from({ length: 20 }, (_, i) => {
     const count = data.filter(p => p['# of Skill Badges Completed'] === i).length;
@@ -598,36 +599,141 @@ export default function Home() {
             </div>
             </div>
           </div>
+
+          {/* Row 4: Achievement Goals (spans 2 columns) */}
+          <div className="col-span-2 bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 rounded-xl p-4 border border-green-200 dark:border-green-800">
+            <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-1">
+              Achievement Goals
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 text-xs mb-4">
+              Progress towards 50 students
+            </p>
+            
+            <div className="space-y-4">
+              {/* Skill Badges Progress */}
+              <div>
+                <div className="flex justify-between items-center mb-1.5">
+                  <label className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+                    Skill Badges
+                  </label>
+                </div>
+                <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-green-400 to-green-600 dark:from-green-500 dark:to-green-700 rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${skillBadges19Percentage}%` }}
+                  />
+                </div>
+                <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                  {skillBadges19Percentage}%
+                </p>
+              </div>
+
+              {/* Arcade Games Progress */}
+              <div>
+                <div className="flex justify-between items-center mb-1.5">
+                  <label className="text-xs font-semibold text-gray-700 dark:text-gray-200">
+                    Arcade Games
+                  </label>
+                </div>
+                <div className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full bg-gradient-to-r from-teal-400 to-teal-600 dark:from-teal-500 dark:to-teal-700 rounded-full transition-all duration-500 ease-out"
+                    style={{ width: `${arcadeGamesPercentage}%` }}
+                  />
+                </div>
+                <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                  {arcadeGamesPercentage}%
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Resources Section - Desktop Only */}
-      <div className="hidden md:block my-8 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-8 border border-blue-200 dark:border-blue-800">
-            <div className="text-center">
-              <div className="flex items-center justify-center mb-4">
-                <svg className='w-8 h-8 text-blue-600 dark:text-blue-400 mr-3' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0112 21.75c1.052 0 2.062-.18 3-.512v-14.25c-1.052-.18-2.062-.25-3-.25zM12 6.042V3.75m0 2.292c-1.19 0-2.37-.08-3.548-.252M12 6.042c1.19 0 2.37.08 3.548.252m-4.478 8.278l-1.834-1.834m0 3.668L17.25 10.5m-1.834 1.834l1.834 1.834m-3.668 0l-1.834-1.834" />
-                </svg>
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-                  Learning Resources
-                </h2>
-              </div>
-              <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
-                Access comprehensive Google Cloud learning materials, hands-on labs, and step-by-step guides to accelerate your cloud journey.
-              </p>
-              <Link href="/resources">
-                <div className="inline-flex items-center space-x-3 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
-                  <svg className='w-6 h-6' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0112 21.75c1.052 0 2.062-.18 3-.512v-14.25c-1.052-.18-2.062-.25-3-.25zM12 6.042V3.75m0 2.292c-1.19 0-2.37-.08-3.548-.252M12 6.042c1.19 0 2.37.08 3.548.252m-4.478 8.278l-1.834-1.834m0 3.668L17.25 10.5m-1.834 1.834l1.834 1.834m-3.668 0l-1.834-1.834" />
-                  </svg>
-                  <span className="font-semibold text-lg">Explore Resources</span>
-                  <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                  </svg>
+      {/* Resources Section - Desktop */}
+      <div className="hidden lg:block my-8 px-4">
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 gap-6">
+            {/* Resources Tile */}
+            <div>
+              <div className="h-full bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-2xl p-8 border border-blue-200 dark:border-blue-800 flex flex-col justify-center">
+                <div className="text-center">
+                  <div className="flex items-center justify-center mb-4">
+                    <svg className='w-8 h-8 text-blue-600 dark:text-blue-400 mr-3' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0112 21.75c1.052 0 2.062-.18 3-.512v-14.25c-1.052-.18-2.062-.25-3-.25zM12 6.042V3.75m0 2.292c-1.19 0-2.37-.08-3.548-.252M12 6.042c1.19 0 2.37.08 3.548.252m-4.478 8.278l-1.834-1.834m0 3.668L17.25 10.5m-1.834 1.834l1.834 1.834m-3.668 0l-1.834-1.834" />
+                    </svg>
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+                      Learning Resources
+                    </h2>
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 mb-6 text-sm">
+                    Access comprehensive Google Cloud learning materials, hands-on labs, and step-by-step guides.
+                  </p>
+                  <Link href="/resources">
+                    <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-6 py-3 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                      <svg className='w-5 h-5' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0112 21.75c1.052 0 2.062-.18 3-.512v-14.25c-1.052-.18-2.062-.25-3-.25zM12 6.042V3.75m0 2.292c-1.19 0-2.37-.08-3.548-.252M12 6.042c1.19 0 2.37.08 3.548.252m-4.478 8.278l-1.834-1.834m0 3.668L17.25 10.5m-1.834 1.834l1.834 1.834m-3.668 0l-1.834-1.834" />
+                      </svg>
+                      <span className="font-semibold">Explore</span>
+                      <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                      </svg>
+                    </div>
+                  </Link>
                 </div>
-              </Link>
+              </div>
+            </div>
+
+            {/* Progress Bars Card */}
+            <div>
+              <div className="h-full bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-900/20 dark:to-teal-900/20 rounded-2xl p-8 border border-green-200 dark:border-green-800 flex flex-col justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-2">
+                    Achievement Goals
+                  </h2>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-6">
+                    Progress towards 50 students
+                  </p>
+                </div>
+                
+                <div className="space-y-6">
+                  {/* Skill Badges Progress */}
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                        Skill Badges
+                      </label>
+                    </div>
+                    <div className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-green-400 to-green-600 dark:from-green-500 dark:to-green-700 rounded-full transition-all duration-500 ease-out"
+                        style={{ width: `${skillBadges19Percentage}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      {skillBadges19Percentage}%
+                    </p>
+                  </div>
+
+                  {/* Arcade Games Progress */}
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="text-sm font-semibold text-gray-700 dark:text-gray-200">
+                        Arcade Games
+                      </label>
+                    </div>
+                    <div className="w-full h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-teal-400 to-teal-600 dark:from-teal-500 dark:to-teal-700 rounded-full transition-all duration-500 ease-out"
+                        style={{ width: `${arcadeGamesPercentage}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      {arcadeGamesPercentage}%
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
