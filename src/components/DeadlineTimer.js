@@ -5,7 +5,7 @@ const DeadlineTimer = () => {
   const [timeLeft, setTimeLeft] = useState(null);
 
   useEffect(() => {
-    const deadline = new Date('2025-10-30T23:59:59');
+    const deadline = new Date('2025-10-31T16:59:59');
 
     const interval = setInterval(() => {
       const now = new Date();
