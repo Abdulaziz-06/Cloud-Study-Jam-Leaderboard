@@ -94,91 +94,175 @@ function Leaderboard({ topPerformer }) {
         />
       </div>
 
-      {isMobile ? (
-        <LeaderboardList Participationdata={filteredData} searchTerm={searchTerm} topPerformer={topPerformer} />
-      ) : (
-        <div className='w-full overflow-x-auto'>
-          <table className='mx-auto w-full table-fixed m-5 border-collapse'>
-            <thead className='text-sm text-[var(--color-secondary)] sticky top-2 z-10'>
-              <tr className='text-left'>
-                <th className="p-4 font-semibold">Rank</th>
-                <th className="p-4 font-semibold">Name</th>
-                <th className="p-4 font-semibold">Skill Badges</th>
-                <th className="p-4 font-semibold">Arcade Games</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-[var(--color-border)] text-sm text-[var(--color-primary)]">
-              {filteredData.map((participant, index) => {
-                const badges = Number(participant['# of Skill Badges Completed'] ?? 0);
-                const games = Number(participant['# of Arcade Games Completed'] ?? 0);
-                const isCampaignCompleter = badges === 19 && games === 1;
-                let displayRank = index + 1;
-                if (participant.locked_position) {
-                  displayRank = participant.locked_position;
-                } else {
-                  const lockedCount = Participationdata.filter(p => p.locked_position).length;
-                  const newMilestoneCount = Participationdata.filter(p => p.badges === 19 && p.games === 1 && !p.locked_position).length;
-                  const unlockedBefore = Participationdata.slice(lockedCount + newMilestoneCount).findIndex(p => p["User Name"] === participant["User Name"]);
-                  if (unlockedBefore !== -1) {
-                    displayRank = lockedCount + newMilestoneCount + unlockedBefore + 1;
-                  }
-                }
-                
-                return (
-                  <tr key={participant.originalIndex} className={`group transition-colors ${
-                    isCampaignCompleter 
-                      ? "top-performer-row" 
-                      : ""
-                  }`}>
-                    <td className="p-4">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold">{displayRank}</span>
-                        {isCampaignCompleter && (
-                          <div className="flex items-center">
-                            <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                            </svg>
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                    <td className="p-4">
-                      <div className="truncate">
-                        {participant["Google Cloud Skills Boost Profile URL"] ? (
-                          <a 
-                            href={participant["Google Cloud Skills Boost Profile URL"]}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`transition-colors duration-200 ${
-                              isCampaignCompleter 
-                                ? "text-yellow-600 group-hover:text-yellow-500 font-bold" 
-                                : "text-[var(--color-primary)] group-hover:text-[var(--color-accent)]"
-                            }`}
-                            title="View Google Cloud Skills Boost Profile"
-                          >
-                            {participant["User Name"]}
-                          </a>
-                        ) : (
-                          <span className={`${
+            <div className="mt-6">
+
+              {isMobile ? (
+
+                <LeaderboardList Participationdata={filteredData} searchTerm={searchTerm} topPerformer={topPerformer} />
+
+              ) : (
+
+                <div className='w-full overflow-x-auto'>
+
+                  <table className='mx-auto w-full table-fixed m-5 border-collapse'>
+
+                    <thead className='text-sm text-[var(--color-secondary)] sticky top-2 z-10'>
+
+                      <tr className='text-left'>
+
+                        <th className="p-4 font-semibold">Rank</th>
+
+                        <th className="p-4 font-semibold">Name</th>
+
+                        <th className="p-4 font-semibold">Skill Badges</th>
+
+                        <th className="p-4 font-semibold">Arcade Games</th>
+
+                      </tr>
+
+                    </thead>
+
+                    <tbody className="divide-y divide-[var(--color-border)] text-sm text-[var(--color-primary)]">
+
+                      {filteredData.map((participant, index) => {
+
+                        const badges = Number(participant['# of Skill Badges Completed'] ?? 0);
+
+                        const games = Number(participant['# of Arcade Games Completed'] ?? 0);
+
+                        const isCampaignCompleter = badges === 19 && games === 1;
+
+                        let displayRank = index + 1;
+
+                        if (participant.locked_position) {
+
+                          displayRank = participant.locked_position;
+
+                        } else {
+
+                          const lockedCount = Participationdata.filter(p => p.locked_position).length;
+
+                          const newMilestoneCount = Participationdata.filter(p => p.badges === 19 && p.games === 1 && !p.locked_position).length;
+
+                          const unlockedBefore = Participationdata.slice(lockedCount + newMilestoneCount).findIndex(p => p["User Name"] === participant["User Name"]);
+
+                          if (unlockedBefore !== -1) {
+
+                            displayRank = lockedCount + newMilestoneCount + unlockedBefore + 1;
+
+                          }
+
+                        }
+
+                        
+
+                        return (
+
+                          <tr key={participant.originalIndex} className={`group transition-colors ${
+
                             isCampaignCompleter 
-                              ? "text-yellow-600 group-hover:text-yellow-500 font-bold" 
-                              : "text-[var(--color-primary)] group-hover:text-[var(--color-accent)]"
+
+                              ? "top-performer-row" 
+
+                              : ""
+
                           }`}>
-                            {participant["User Name"]}
-                          </span>
-                        )}
-                      </div>
-                      <div className="text-xs text-[var(--color-secondary)] truncate">{participant["User Email"]?.toLowerCase() || "Email hidden"}</div>
-                    </td>
-                    <td className="p-4">{participant["# of Skill Badges Completed"]}</td>
-                    <td className="p-4">{participant["# of Arcade Games Completed"]}</td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
+
+                            <td className="p-4">
+
+                              <div className="flex items-center gap-2">
+
+                                <span className="font-semibold">{displayRank}</span>
+
+                                {isCampaignCompleter && (
+
+                                  <div className="flex items-center">
+
+                                    <svg className="w-5 h-5 text-yellow-500" fill="currentColor" viewBox="0 0 24 24">
+
+                                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+
+                                    </svg>
+
+                                  </div>
+
+                                )}
+
+                              </div>
+
+                            </td>
+
+                            <td className="p-4">
+
+                              <div className="truncate">
+
+                                {participant["Google Cloud Skills Boost Profile URL"] ? (
+
+                                  <a 
+
+                                    href={participant["Google Cloud Skills Boost Profile URL"]}
+
+                                    target="_blank"
+
+                                    rel="noopener noreferrer"
+
+                                    className={`transition-colors duration-200 ${
+
+                                      isCampaignCompleter 
+
+                                        ? "text-yellow-600 group-hover:text-yellow-500 font-bold" 
+
+                                        : "text-[var(--color-primary)] group-hover:text-[var(--color-accent)]"
+
+                                    }`}
+
+                                    title="View Google Cloud Skills Boost Profile"
+
+                                  >
+
+                                    {participant["User Name"]}
+
+                                  </a>
+
+                                ) : (
+
+                                  <span className={`${isCampaignCompleter 
+
+                                      ? "text-yellow-600 group-hover:text-yellow-500 font-bold" 
+
+                                      : "text-[var(--color-primary)] group-hover:text-[var(--color-accent)]"}`}>
+
+                                    {participant["User Name"]}
+
+                                  </span>
+
+                                )}
+
+                              </div>
+
+                              <div className="text-xs text-[var(--color-secondary)] truncate">{participant["User Email"]?.toLowerCase() || "Email hidden"}</div>
+
+                            </td>
+
+                            <td className="p-4">{participant["# of Skill Badges Completed"]}</td>
+
+                            <td className="p-4">{participant["# of Arcade Games Completed"]}</td>
+
+                          </tr>
+
+                        )
+
+                      })}
+
+                    </tbody>
+
+                  </table>
+
+                </div>
+
+              )}
+
+            </div>
     </div>
   )
 }
